@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -19,10 +20,11 @@ export class UsersController {
   constructor(private readonly userService: UserService) {}
 
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @Get()
   getUsers(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
-    return this.userService.getUsers(page, limit);
+    const pageNumber = page ? Number(page) : 1;
+    const limitNumber = limit ? Number(limit) : 5;
+    return this.userService.getUsers(pageNumber, limitNumber);
   }
 
   @HttpCode(201)
@@ -34,21 +36,21 @@ export class UsersController {
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() user: Users) {
+  updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() user: Users) {
     return this.userService.updateUser(id, user);
   }
 
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.deleteUser(id);
   }
 
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Get(':id')
-  getUserById(@Param('id') id: string) {
+  getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.getUserById(id);
   }
 }

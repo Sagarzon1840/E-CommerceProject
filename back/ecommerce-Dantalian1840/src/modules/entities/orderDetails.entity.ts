@@ -7,7 +7,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Orders } from './orders.entity';
 import { Products } from './products.entity';
 
@@ -16,7 +15,7 @@ import { Products } from './products.entity';
 })
 export class OrderDetails {
   @PrimaryGeneratedColumn('uuid')
-  id: number = uuid();
+  id: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
@@ -29,7 +28,7 @@ export class OrderDetails {
   //* OrderDetails N:N Products
   @ManyToMany(() => Products)
   @JoinTable({
-    name: 'ORDERDETAILS_PRODUCTS',
+    name: 'orderdetails_products',
     joinColumn: { name: 'product_id', referencedColumnName: 'id' },
     inverseJoinColumn: {
       name: 'orderdetail_id',

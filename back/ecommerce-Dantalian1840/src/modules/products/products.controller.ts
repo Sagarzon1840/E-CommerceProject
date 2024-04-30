@@ -5,7 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
-  Post,
+  ParseUUIDPipe,
   Put,
   Query,
   UseGuards,
@@ -21,12 +21,13 @@ export class ProductsController {
   @HttpCode(200)
   @Get()
   getProducts(@Query('page') page: string, @Query('limit') limit: string) {
-    return this.productsService.getProducts(Number(page), Number(limit));
+    const pageNumber = page ? Number(page) : 1;
+    const limitNumber = limit ? Number(limit) : 5;
+    return this.productsService.getProducts(pageNumber, limitNumber);
   }
 
   @HttpCode(201)
-  @UseGuards(AuthGuard)
-  @Post()
+  @Get('seeder')
   createProducts() {
     return this.productsService.createProduct();
   }
@@ -34,20 +35,23 @@ export class ProductsController {
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() product: Products) {
+  updateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() product: Products,
+  ) {
     return this.productsService.updateProduct(id, product);
   }
 
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.deleteProduct(id);
   }
 
   @HttpCode(200)
   @Get(':id')
-  getProductById(@Param('id') id: string) {
+  getProductById(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.getProductById(id);
   }
 }

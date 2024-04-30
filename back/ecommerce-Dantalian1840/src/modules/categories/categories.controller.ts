@@ -6,12 +6,12 @@ import { Categories } from '../entities/categories.entity';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Get('seeder')
-  async getCategories(): Promise<Categories[]> {
+  @Get()
+  getCategories(): Promise<Categories[]> {
     return this.categoriesService.getCategories();
   }
 
-  @Get()
+  @Get('seeder')
   addCategory(): Promise<string> {
     return this.categoriesService.addCategories();
   }

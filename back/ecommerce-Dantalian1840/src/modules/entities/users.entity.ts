@@ -5,7 +5,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Orders } from './orders.entity';
 
 @Entity({
@@ -13,12 +12,12 @@ import { Orders } from './orders.entity';
 })
 export class Users {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
 
   @Column({ type: 'varchar', length: 20, nullable: false })
@@ -30,7 +29,7 @@ export class Users {
   @Column({ nullable: true, type: 'int' })
   phone: string | null;
 
-  @Column({ nullable: true, length: 50 })
+  @Column({ type: 'varchar', nullable: true, length: 50 })
   country: string | null;
 
   @Column({ nullable: true, length: 50, type: 'varchar' })

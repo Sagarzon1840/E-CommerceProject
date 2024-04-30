@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { config as dotenvConfig } from 'dotenv';
 import { registerAs } from '@nestjs/config';
 
-dotenvConfig({ path: '.env.development' });
+dotenvConfig({ path: '.development.env' });
 
 const config = {
   type: 'postgres',
@@ -11,12 +11,12 @@ const config = {
   port: process.env.DB_PORT as unknown as number,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  entities: ['dist/modules/entities/*.entity{.js,.ts}'],
   migrations: ['dist/migrations/*{.js,.ts}'],
-  synchronize: false,
+  synchronize: true,
   logging: true,
   autoLoadEntities: true,
-  dropSchema: true,
+  dropSchema: false,
 };
 export default registerAs('typeorm', () => config);
 

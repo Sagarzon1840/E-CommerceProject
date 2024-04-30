@@ -13,19 +13,22 @@ export class ProductsService {
     private categoryRepository: Repository<Categories>,
   ) {}
 
-  async getProducts(page: number, limit: number) {
-    const product = await this.productRepository.find();
+  async getProducts(page: number, limit: number): Promise<Products[]> {
+    let products = await this.productRepository.find({
+      relations: { category: true },
+    });
     const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const productList = product.slice(startIndex, endIndex);
-    const productStock = productList.filter((product) => product.stock !== 0);
-    return productStock;
+    const endIndex = startIndex + limit;
+
+    products = products.slice(startIndex, endIndex);
+
+    return products;
   }
   async getProductById(id: string) {
     const product = await this.productRepository.findOneBy({ id });
-    // if(!product){
-    //   return
-    // }
+    if (!product) {
+      return `Product with id ${id} not found`;
+    }
     return product;
   }
 

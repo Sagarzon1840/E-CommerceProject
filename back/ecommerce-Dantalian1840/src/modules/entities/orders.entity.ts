@@ -6,7 +6,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { Users } from './users.entity';
 import { OrderDetails } from './orderDetails.entity';
 
@@ -15,7 +14,7 @@ import { OrderDetails } from './orderDetails.entity';
 })
 export class Orders {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
   @Column()
   date: Date;
