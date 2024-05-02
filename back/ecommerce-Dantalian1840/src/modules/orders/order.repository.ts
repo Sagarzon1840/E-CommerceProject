@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderDetails } from '../entities/orderDetails.entity';
@@ -22,7 +22,7 @@ export class OrdersRepository {
     //Verificación del usuario
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
-      return `User with id ${userId} not found`;
+      throw new NotFoundException(`User with id ${userId} not found`);
     }
 
     const order = new Orders();
@@ -43,7 +43,7 @@ export class OrdersRepository {
 
         // VALIDAR LA EXISTENCIA DE LOS PRODUCTOS
         if (!product) {
-          return `Product with id ${element.id} not founded`;
+          throw new NotFoundException(`User with id ${element.id} not found`);
         }
 
         //Calcular el precio total
@@ -86,7 +86,7 @@ export class OrdersRepository {
     });
 
     if (!order) {
-      return `Order with id ${orderId} not found`;
+      throw new NotFoundException(`Order with id ${orderId} not found`);
     }
     return order;
   }

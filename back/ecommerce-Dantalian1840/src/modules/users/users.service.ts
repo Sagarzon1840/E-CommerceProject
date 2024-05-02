@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/users.entity';
+import { CreateUserDto } from 'src/dtos/userCreation.dto';
 
 @Injectable()
 export class UserService {
@@ -12,7 +17,6 @@ export class UserService {
 
   async getUsers(page: number, limit: number) {
     const skip = (page - 1) * limit;
-    console.log(page, limit);
 
     const users = await this.usersRepository.find({
       take: limit,
@@ -28,35 +32,44 @@ export class UserService {
         orders: true,
       },
     });
-    if (user) return `User with id ${id} not found`;
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
-    const { password, ...userNoPassword } = user;
+    const { password, isAdmin, ...userNoPassword } = user;
     return userNoPassword;
   }
   async findByEmail(email: string) {
-    const user = this.usersRepository.findOneBy({ email });
-    if (user) {
-      return user;
+    const user = await this.usersRepository.findOneBy({ email });
+    if (!user) {
+      throw new BadRequestException(`Incorrect credentials`);
     }
-    return null;
+
+    return user;
   }
 
   async createUsers(user: Omit<Users, 'id'>) {
     const newUser = await this.usersRepository.save(user);
-    const { password, ...userNoPassword } = newUser;
+    const { password, isAdmin, ...userNoPassword } = newUser;
+    if (!userNoPassword) throw new BadRequestException(`User creation failed`);
     return userNoPassword;
   }
 
   async updateUser(id: string, user: Users) {
+    await this.usersRepository.update(id, user);
     const foundUser = await this.usersRepository.findOneBy({ id });
-    const { password, ...userNoPassword } = foundUser;
+
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+
+    const { password, isAdmin, ...userNoPassword } = foundUser;
     return userNoPassword;
   }
 
   async deleteUser(id: string) {
     const foundUser = await this.usersRepository.findOneBy({ id });
+
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+
     this.usersRepository.remove(foundUser);
-    const { password, ...userNoPassword } = foundUser;
+    const { password, isAdmin, ...userNoPassword } = foundUser;
     return userNoPassword;
   }
 }

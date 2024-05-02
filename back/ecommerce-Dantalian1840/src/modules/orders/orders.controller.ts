@@ -5,20 +5,25 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { CreateOrderDto } from 'src/dtos/orderCreation.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  createOrders(@Body() createOrder: any) {
+  @UseGuards(AuthGuard)
+  createOrders(@Body() createOrder: CreateOrderDto) {
     const { userId, products } = createOrder;
     return this.ordersService.createOrders(userId, products);
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   getOrder(@Param('id', ParseUUIDPipe) id: string) {
     return this.ordersService.getOrder(id);
   }

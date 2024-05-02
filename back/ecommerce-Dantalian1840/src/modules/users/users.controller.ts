@@ -4,9 +4,9 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
-  Post,
   Put,
   Query,
   UseGuards,
@@ -14,6 +14,9 @@ import {
 import { UserService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Users } from '../entities/users.entity';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../auth/roles.enum';
 
 @Controller('users')
 export class UsersController {
@@ -21,36 +24,45 @@ export class UsersController {
 
   @HttpCode(200)
   @Get()
-  getUsers(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  async getUsers(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5,
+  ) {
     const pageNumber = page ? Number(page) : 1;
     const limitNumber = limit ? Number(limit) : 5;
     return this.userService.getUsers(pageNumber, limitNumber);
   }
 
-  @HttpCode(201)
-  @Post()
-  createUser(@Body() user: Users) {
-    return this.userService.createUsers(user);
-  }
-
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Put(':id')
-  updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() user: Users) {
-    return this.userService.updateUser(id, user);
+  async updateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() user: Users,
+  ) {
+    const foundUser = this.userService.updateUser(id, user);
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+    return foundUser;
   }
 
   @HttpCode(200)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.deleteUser(id);
+  async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
+    const foundUser = this.userService.deleteUser(id);
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+    return foundUser;
   }
 
   @HttpCode(200)
   @UseGuards(AuthGuard)
   @Get(':id')
-  getUserById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.getUserById(id);
+  async getUserById(@Param('id', ParseUUIDPipe) id: string) {
+    const foundUser = this.userService.getUserById(id);
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+    return foundUser;
   }
 }
