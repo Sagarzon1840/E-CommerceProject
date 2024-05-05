@@ -35,8 +35,6 @@ export class OrdersRepository {
     // Asociación de la id con el producto
     const productsArray = await Promise.all(
       products.map(async (element) => {
-        //!VALIDAR STOCK con atributo stock o con stock 0
-
         const product = await this.productRepository.findOneBy({
           id: element.id,
         });
@@ -44,6 +42,11 @@ export class OrdersRepository {
         // VALIDAR LA EXISTENCIA DE LOS PRODUCTOS
         if (!product) {
           throw new NotFoundException(`User with id ${element.id} not found`);
+        }
+        if (product.stock <= 0) {
+          throw new NotFoundException(
+            `Product with id ${product.id} doesnt have stock`,
+          );
         }
 
         //Calcular el precio total

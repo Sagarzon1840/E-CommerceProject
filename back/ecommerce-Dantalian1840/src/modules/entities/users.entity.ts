@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -35,8 +36,9 @@ export class Users {
   @Column({ nullable: true, length: 50, type: 'varchar' })
   city: string | null;
 
-  @Column({ default: false })
-  isAdmin: boolean;
+  @Index()
+  @Column({ type: 'smallint', default: 1 })
+  role: number;
 
   @OneToMany(() => Orders, (order) => order.user)
   @JoinColumn({ name: 'order_id' })

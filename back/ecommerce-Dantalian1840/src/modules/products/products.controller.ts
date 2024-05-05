@@ -50,7 +50,8 @@ export class ProductsController {
   }
 
   @HttpCode(200)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     const foundUser = this.productsService.deleteProduct(id);

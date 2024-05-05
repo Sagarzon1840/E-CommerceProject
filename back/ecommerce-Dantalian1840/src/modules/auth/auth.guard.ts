@@ -15,12 +15,13 @@ export class AuthGuard implements CanActivate {
     const token = request.headers['authorization']?.split(' ')[1] ?? '';
 
     if (!token) {
-      throw new UnauthorizedException('Basic Token not found');
+      throw new UnauthorizedException('Bearer Token not found');
     }
 
     try {
       const secret = process.env.JWT_SECRET;
       const payload = await this.jwtService.verifyAsync(token, { secret });
+
       payload.iat = new Date(payload.iat * 1000);
       payload.exp = new Date(payload.exp * 1000);
       request.user = payload;

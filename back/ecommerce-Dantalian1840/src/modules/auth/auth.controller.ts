@@ -17,6 +17,7 @@ export class AuthController {
     return this.authService.signUp(user);
   }
 
+  @HttpCode(201)
   @Post('signin')
   async signIn(@Body() loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;

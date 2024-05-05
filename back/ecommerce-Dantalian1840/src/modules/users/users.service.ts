@@ -34,13 +34,13 @@ export class UserService {
     });
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
-    const { password, isAdmin, ...userNoPassword } = user;
+    const { password, role, ...userNoPassword } = user;
     return userNoPassword;
   }
   async findByEmail(email: string) {
     const user = await this.usersRepository.findOneBy({ email });
     if (!user) {
-      throw new BadRequestException(`Incorrect credentials`);
+      return null;
     }
 
     return user;
@@ -48,7 +48,7 @@ export class UserService {
 
   async createUsers(user: Omit<Users, 'id'>) {
     const newUser = await this.usersRepository.save(user);
-    const { password, isAdmin, ...userNoPassword } = newUser;
+    const { password, role, ...userNoPassword } = newUser;
     if (!userNoPassword) throw new BadRequestException(`User creation failed`);
     return userNoPassword;
   }
@@ -59,7 +59,7 @@ export class UserService {
 
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
 
-    const { password, isAdmin, ...userNoPassword } = foundUser;
+    const { password, role, ...userNoPassword } = foundUser;
     return userNoPassword;
   }
 
@@ -69,7 +69,7 @@ export class UserService {
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
 
     this.usersRepository.remove(foundUser);
-    const { password, isAdmin, ...userNoPassword } = foundUser;
+    const { password, role, ...userNoPassword } = foundUser;
     return userNoPassword;
   }
 }

@@ -52,11 +52,23 @@ export class AuthService {
     if (!foundUser || !isPasswordValid)
       throw new BadRequestException('Incorrect credentials');
 
+    const userRoles: Role[] = [];
+    if (foundUser.role) {
+      if (foundUser.role === Role.Admin) {
+        userRoles.push(Role.Admin);
+      }
+      if (foundUser.role === Role.SuperAdmin) {
+        userRoles.push(Role.SuperAdmin);
+      } else {
+        userRoles.push(Role.User);
+      }
+    }
+
     const userPayload = {
       sub: foundUser.id,
       id: foundUser.id,
       email: foundUser.email,
-      roles: [foundUser.isAdmin ? Role.Admin : Role.User],
+      roles: userRoles,
     };
     const token = this.jwtService.sign(userPayload);
     return { success: 'Successful Login', token };
