@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, NotFoundException } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Categories } from '../entities/categories.entity';
 import { ApiTags } from '@nestjs/swagger';
@@ -10,11 +10,15 @@ export class CategoriesController {
 
   @Get()
   getCategories(): Promise<Categories[]> {
-    return this.categoriesService.getCategories();
+    const categories = this.categoriesService.getCategories();
+    if (!categories) throw new NotFoundException(`Categores get error`);
+    return categories;
   }
 
   @Get('seeder')
   addCategory(): Promise<string> {
-    return this.categoriesService.addCategories();
+    const category = this.categoriesService.addCategories();
+    if (!category) throw new NotFoundException('Category loader error');
+    return category;
   }
 }

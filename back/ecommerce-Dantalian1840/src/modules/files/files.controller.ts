@@ -2,6 +2,7 @@ import {
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -40,6 +41,8 @@ export class FilesController {
     )
     file: Express.Multer.File,
   ) {
-    return this.filesService.uploadImage(id, file);
+    const image = this.filesService.uploadImage(id, file);
+    if (!image) throw new NotFoundException(`Image upload error`);
+    return image;
   }
 }

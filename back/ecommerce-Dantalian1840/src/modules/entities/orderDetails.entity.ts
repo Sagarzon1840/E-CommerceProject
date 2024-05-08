@@ -14,9 +14,15 @@ import { Products } from './products.entity';
   name: 'orderdetails',
 })
 export class OrderDetails {
+  /**
+   * UUID generated automatically
+   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  /**
+   * Order details price.
+   */
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 

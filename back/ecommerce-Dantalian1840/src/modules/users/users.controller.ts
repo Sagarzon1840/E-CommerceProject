@@ -36,7 +36,11 @@ export class UsersController {
   ) {
     const pageNumber = page ? Number(page) : 1;
     const limitNumber = limit ? Number(limit) : 5;
-    return this.userService.getUsers(pageNumber, limitNumber);
+    try {
+      return this.userService.getUsers(pageNumber, limitNumber);
+    } catch (error) {
+      throw new NotFoundException(error);
+    }
   }
 
   @HttpCode(200)

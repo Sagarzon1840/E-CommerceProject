@@ -4,6 +4,9 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
   name: 'files',
 })
 export class Files {
+  /**
+   * UUID generated automatically
+   */
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -22,12 +23,16 @@ export class OrdersController {
   @UseGuards(AuthGuard)
   createOrders(@Body() createOrder: CreateOrderDto) {
     const { userId, products } = createOrder;
-    return this.ordersService.createOrders(userId, products);
+    const orders = this.ordersService.createOrders(userId, products);
+    if (!orders) throw new NotFoundException('Order creation error');
+    return orders;
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
   getOrder(@Param('id', ParseUUIDPipe) id: string) {
-    return this.ordersService.getOrder(id);
+    const order = this.ordersService.getOrder(id);
+    if (!order) throw new NotFoundException(`Order with id ${id} not found`);
+    return order;
   }
 }

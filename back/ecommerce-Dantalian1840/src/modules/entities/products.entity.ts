@@ -22,15 +22,27 @@ export class ColumnNumericTransformer {
   name: 'products',
 })
 export class Products {
+  /**
+   * UUID generated automatically
+   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  /**
+   * Product name, max 50 characters and unique value
+   */
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
 
+  /**
+   * Product description
+   */
   @Column({ type: 'text', nullable: false })
   description: string;
 
+  /**
+   * Product price, may be decimal
+   */
   @Column({
     type: 'decimal',
     precision: 10,
@@ -40,9 +52,15 @@ export class Products {
   })
   price: number;
 
+  /**
+   * Product stock
+   */
   @Column({ type: 'int', nullable: false })
   stock: number;
 
+  /**
+   * Product url, may be empty
+   */
   @Column({
     type: 'text',
     nullable: true,

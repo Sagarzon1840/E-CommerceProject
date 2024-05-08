@@ -13,9 +13,15 @@ import { OrderDetails } from './orderDetails.entity';
   name: 'orders',
 })
 export class Orders {
+  /**
+   * UUID generated automatically
+   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  /**
+   * Order creation date.
+   */
   @Column()
   date: Date;
 

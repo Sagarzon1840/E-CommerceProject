@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/dtos/userCreation.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -17,7 +25,9 @@ export class AuthController {
   @HttpCode(201)
   @Post('signup')
   async signUp(@Body() user: CreateUserDto) {
-    return this.authService.signUp(user);
+    const signUp = this.authService.signUp(user);
+    if (!signUp) throw new BadRequestException('Sign up error');
+    return signUp;
   }
 
   @HttpCode(201)
@@ -25,6 +35,8 @@ export class AuthController {
   async signIn(@Body() loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
 
-    return this.authService.signIn(email, password);
+    const signIn = this.authService.signIn(email, password);
+    if (!signIn) throw new BadGatewayException('Sign in error');
+    return signIn;
   }
 }

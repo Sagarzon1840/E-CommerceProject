@@ -11,9 +11,15 @@ import { Products } from './products.entity';
   name: 'categories',
 })
 export class Categories {
+  /**
+   * UUID generated automatically
+   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  /**
+   * Category name, maximum 50 characters and unique value
+   */
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
   name: string;
 
