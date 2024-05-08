@@ -7,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/users.entity';
-import { CreateUserDto } from 'src/dtos/userCreation.dto';
 
 @Injectable()
 export class UserService {
@@ -46,14 +45,14 @@ export class UserService {
     return user;
   }
 
-  async createUsers(user: Omit<Users, 'id'>) {
+  async createUsers(user: Partial<Users>) {
     const newUser = await this.usersRepository.save(user);
     const { password, role, ...userNoPassword } = newUser;
     if (!userNoPassword) throw new BadRequestException(`User creation failed`);
     return userNoPassword;
   }
 
-  async updateUser(id: string, user: Users) {
+  async updateUser(id: string, user: Partial<Users>) {
     await this.usersRepository.update(id, user);
     const foundUser = await this.usersRepository.findOneBy({ id });
 

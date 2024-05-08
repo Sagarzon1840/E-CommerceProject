@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -13,11 +14,14 @@ import {
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { Users } from '../entities/users.entity';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/roles.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from 'src/dtos/userCreation.dto';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UserService) {}
@@ -40,9 +44,10 @@ export class UsersController {
   @Put(':id')
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() user: Users,
+    @Body() user: CreateUserDto,
   ) {
-    const foundUser = this.userService.updateUser(id, user);
+    const { passwordConfirm, ...userNoPasswordConfirm } = user;
+    const foundUser = this.userService.updateUser(id, userNoPasswordConfirm);
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
     return foundUser;
   }

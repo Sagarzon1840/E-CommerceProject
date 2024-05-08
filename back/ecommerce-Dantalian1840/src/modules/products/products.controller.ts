@@ -17,7 +17,9 @@ import { Products } from '../entities/products.entity';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/roles.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -39,8 +41,9 @@ export class ProductsController {
   @HttpCode(200)
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Put(':id')
-  updateUser(
+  updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() product: Products,
   ) {
@@ -53,7 +56,7 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
+  deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     const foundUser = this.productsService.deleteProduct(id);
 
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);

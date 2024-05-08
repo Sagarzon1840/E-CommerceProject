@@ -21,7 +21,7 @@ export class Users {
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
 
-  @Column({ type: 'varchar', nullable: false }) // CAMBIO A MAYOR LENGTH POR LA EXTENSIÓN DEL HASH
+  @Column({ type: 'varchar', length: 255, nullable: false }) // CAMBIO A MAYOR LENGTH POR LA EXTENSIÓN DEL HASH 72
   password: string;
 
   @Column({ nullable: true, type: 'text' })

@@ -16,7 +16,7 @@ export class OrdersRepository {
     @InjectRepository(Products) private productRepository: Repository<Products>,
   ) {}
 
-  async createOrder(userId: string, products: any) {
+  async createOrder(userId: string, products: Products[]) {
     let total = 0;
 
     //Verificación del usuario
@@ -66,7 +66,7 @@ export class OrdersRepository {
     const orderDetail = new OrderDetails();
 
     orderDetail.price = Number(Number(total).toFixed(2));
-    orderDetail.products = productsArray; //! revisar
+    orderDetail.products = productsArray;
     orderDetail.order = newOrder;
 
     await this.orderDetailsRepository.save(orderDetail);
