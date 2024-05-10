@@ -13,11 +13,11 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { Products } from '../entities/products.entity';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateProductDto } from 'src/dtos/productCreation.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -45,10 +45,9 @@ export class ProductsController {
   @Put(':id')
   updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() product: Products,
+    @Body() product: CreateProductDto,
   ) {
     const foundUser = this.productsService.updateProduct(id, product);
-    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
     return foundUser;
   }
 

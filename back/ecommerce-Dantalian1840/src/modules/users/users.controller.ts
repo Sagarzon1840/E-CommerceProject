@@ -44,7 +44,8 @@ export class UsersController {
   }
 
   @HttpCode(200)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,

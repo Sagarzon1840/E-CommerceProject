@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
@@ -41,8 +42,9 @@ export class FilesController {
     )
     file: Express.Multer.File,
   ) {
+    if (!file) throw new BadRequestException(`Image upload error`);
     const image = this.filesService.uploadImage(id, file);
-    if (!image) throw new NotFoundException(`Image upload error`);
+    if (!image) throw new NotFoundException(`Image service error`);
     return image;
   }
 }

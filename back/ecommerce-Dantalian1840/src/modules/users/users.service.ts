@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/users.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -53,7 +54,18 @@ export class UserService {
   }
 
   async updateUser(id: string, user: Partial<Users>) {
-    await this.usersRepository.update(id, user);
+    try {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      if (!hashedPassword) {
+        throw new BadRequestException('Password could not be hashed');
+      }
+      await this.usersRepository.update(id, {
+        ...user,
+        password: hashedPassword,
+      });
+    } catch (error) {
+      throw new BadRequestException('Error actualizando usuario');
+    }
     const foundUser = await this.usersRepository.findOneBy({ id });
 
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);

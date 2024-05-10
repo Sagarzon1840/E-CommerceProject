@@ -61,10 +61,14 @@ export class ProductsService {
     return 'Products added successfuly';
   }
 
-  async updateProduct(id: string, product: Products) {
+  async updateProduct(id: string, product: Partial<Products>) {
     await this.productRepository.update(id, product);
-    const updatedProduct = await this.productRepository.findOneBy({ id });
-    return updatedProduct;
+
+    const foundProduct = await this.productRepository.findOneBy({ id });
+    if (!foundProduct)
+      throw new NotFoundException(`Product with id ${id} not found`);
+
+    return foundProduct;
   }
 
   async deleteProduct(id: string) {
