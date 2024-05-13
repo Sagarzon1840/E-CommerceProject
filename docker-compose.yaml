@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nestapp:
-    build: ./
+    build: sagarzon184/nest_proyect:latest
     ports:
       - '3000:3000'
     env_file:
