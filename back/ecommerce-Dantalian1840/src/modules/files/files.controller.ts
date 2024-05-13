@@ -13,8 +13,14 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
-import { AuthGuard } from '../auth/auth.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '../../guards/auth.guard';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Files')
 @ApiBearerAuth()
@@ -25,6 +31,20 @@ export class FilesController {
   @Post('uploadImage/:id')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('imgUrl'))
+  @ApiParam({ name: 'id', description: 'ID of the product to update image' })
+  @ApiBody({
+    description: 'Image file',
+    schema: {
+      type: 'object',
+      properties: {
+        imgUrl: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
   async uploadImage(
     @Param('id') id: string,
     @UploadedFile(

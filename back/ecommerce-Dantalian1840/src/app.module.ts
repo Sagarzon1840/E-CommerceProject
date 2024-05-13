@@ -8,10 +8,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrm from './config/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { OrdersModule } from './modules/orders/orders.module';
 import { FilesModule } from './modules/files/files.module';
 import { JwtModule } from '@nestjs/jwt';
+import { GlobalExceptionFilter } from './interceptors/globalExceptions.interceptor';
 
 @Module({
   imports: [
@@ -41,6 +42,10 @@ import { JwtModule } from '@nestjs/jwt';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
   ],
 })

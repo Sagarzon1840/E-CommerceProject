@@ -3,7 +3,7 @@ import { UserService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/dtos/userCreation.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from './roles.enum';
+import { Role } from '../../enums/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -56,9 +56,6 @@ export class AuthService {
     if (foundUser.role) {
       if (foundUser.role === Role.Admin) {
         userRoles.push(Role.Admin);
-      }
-      if (foundUser.role === Role.SuperAdmin) {
-        userRoles.push(Role.SuperAdmin);
       } else {
         userRoles.push(Role.User);
       }

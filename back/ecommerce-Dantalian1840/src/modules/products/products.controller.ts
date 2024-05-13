@@ -12,10 +12,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { AuthGuard } from '../auth/auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { Role } from '../auth/roles.enum';
+import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../enums/roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from 'src/dtos/productCreation.dto';
 
@@ -48,6 +48,7 @@ export class ProductsController {
     @Body() product: CreateProductDto,
   ) {
     const foundUser = this.productsService.updateProduct(id, product);
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
     return foundUser;
   }
 

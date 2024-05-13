@@ -13,10 +13,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
-import { AuthGuard } from '../auth/auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { Role } from '../auth/roles.enum';
+import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../enums/roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dtos/userCreation.dto';
 
