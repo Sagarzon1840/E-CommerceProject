@@ -26,6 +26,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./back/ecommerce-Dantalian1840/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nest_proyect:latest
