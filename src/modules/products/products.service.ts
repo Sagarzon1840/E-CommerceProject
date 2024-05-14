@@ -24,6 +24,7 @@ export class ProductsService {
 
     return products;
   }
+
   async getProductById(id: string) {
     const product = await this.productRepository.findOneBy({ id });
     if (!product) {

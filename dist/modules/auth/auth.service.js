@@ -54,9 +54,6 @@ let AuthService = class AuthService {
             if (foundUser.role === roles_enum_1.Role.Admin) {
                 userRoles.push(roles_enum_1.Role.Admin);
             }
-            if (foundUser.role === roles_enum_1.Role.SuperAdmin) {
-                userRoles.push(roles_enum_1.Role.SuperAdmin);
-            }
             else {
                 userRoles.push(roles_enum_1.Role.User);
             }

@@ -1,3 +1,14 @@
 node_modules
 .env
 dist
+dist/main.js
+dist/main.js.map
+dist/tsconfig.build.tsbuildinfo
+dist/config/typeorm.js
+dist/config/typeorm.js.map
+dist/enums/roles.enum.d.ts
+dist/enums/roles.enum.js
+dist/enums/roles.enum.js.map
+dist/modules/auth/auth.service.js
+dist/modules/auth/auth.service.js.map
+dist/modules/products/products.service.js.map
